@@ -5,6 +5,11 @@ from pynput import mouse
 from PIL import ImageGrab
 import pyperclip
 
+bg_color = "#EAEDF0"
+black = "#1F2628"
+green = "#7AAA28"
+red = "#E73F0B"
+
 # Глобальная переменная для отслеживания состояния работы
 is_running = True
 
@@ -20,7 +25,6 @@ class TextRedirector:
     def flush(self):
         pass
 
-# --- Функционал ---
 def rgb_to_hex(rgb):
     return '#%02x%02x%02x' % rgb
 
@@ -59,14 +63,14 @@ def stop_capture():
     global is_running
     if is_running:
         is_running = False
-        status_label.config(text="Статус: Пауза", fg="red")
+        status_label.config(text="Статус: пауза", fg=red, bg=bg_color)
         print("Захват цвета приостановлен.")
 
 def start_capture():
     global is_running
     if not is_running:
         is_running = True
-        status_label.config(text="Статус: Работает", fg="green")
+        status_label.config(text="Статус: работает", fg=green, bg=bg_color)
         print("Захват цвета возобновлен.")
 
 # GUI
@@ -75,6 +79,7 @@ def start_app():
     root = tk.Tk()
     root.title("Color Picker")
     root.geometry("450x300+100+100")
+    root.configure(bg=bg_color)
     root.attributes('-topmost', True)
     
     # --- Настройка корректного закрытия фонового потока pynput при закрытии окна ---
@@ -84,7 +89,7 @@ def start_app():
     root.protocol("WM_DELETE_WINDOW", on_closing)
     
     # --- Верхняя панель: Цвет и Статус ---
-    top_frame = tk.Frame(root, pady=10)
+    top_frame = tk.Frame(root, pady=10, bg=bg_color)
     top_frame.pack(fill=tk.X)
     
     # Цветной квадратик
@@ -93,21 +98,21 @@ def start_app():
     color_preview.pack_propagate(False)
     
     # Текстовый код цвета
-    color_label = tk.Label(top_frame, text="#FFFFFF", font=("Courier", 14, "bold"))
+    color_label = tk.Label(top_frame, text="#FFFFFF", font=("Courier", 14, "bold"), fg=black, bg=bg_color)
     color_label.pack(side=tk.LEFT)
     
     # Текстовый статус работы
-    status_label = tk.Label(top_frame, text="Статус: Работает", font=("Arial", 10, "bold"), fg="green")
+    status_label = tk.Label(top_frame, text="Статус: работает", font=("Arial", 10, "bold"), fg=green, bg=bg_color)
     status_label.pack(side=tk.RIGHT, padx=15)
     
     # --- Средняя панель: Кнопки управления ---
-    btn_frame = tk.Frame(root, pady=5)
+    btn_frame = tk.Frame(root, pady=5, bg=bg_color)
     btn_frame.pack(fill=tk.X)
     
-    btn_start = tk.Button(btn_frame, text="Включить (Старт)", command=start_capture, width=15, bg="#E1F5FE")
+    btn_start = tk.Button(btn_frame, text="▶ Старт", command=start_capture, width=15, fg="#ffffff", bg=green)
     btn_start.pack(side=tk.LEFT, padx=15)
     
-    btn_stop = tk.Button(btn_frame, text="Выключить (Пауза)", command=stop_capture, width=15, bg="#FFEBEE")
+    btn_stop = tk.Button(btn_frame, text="⏸ Пауза", command=stop_capture, width=15, fg="#ffffff", bg=red)
     btn_stop.pack(side=tk.LEFT, padx=5)
     
     # --- Нижняя панель: Логи ---
@@ -117,11 +122,11 @@ def start_app():
     # Перенаправляем stdout
     sys.stdout = TextRedirector(log_area)
 
-    print("=" * 30)
+    print("=" * 47)
     print("Color Picker запущен!")
-    print("ЛКМ в любом месте -> цвет в буфер")
+    print("ЛКМ в любом месте -> цвет (HEX) в буфер обмена")
     print("Клик по этому окну игнорируется.")
-    print("=" * 30)
+    print("=" * 47)
     
     listener_mouse = mouse.Listener(on_click=on_click)
     listener_mouse.start()
