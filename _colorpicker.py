@@ -10,10 +10,9 @@ black = "#1F2628"
 green = "#7AAA28"
 red = "#E73F0B"
 
-# Глобальная переменная для отслеживания состояния работы
 is_running = True
 
-# --- Перенаправление print в GUI ---
+# Перенаправление print в GUI
 class TextRedirector:
     def __init__(self, widget):
         self.widget = widget
@@ -51,7 +50,7 @@ def on_click(x, y, button, pressed):
             pyperclip.copy(hex_color)
             print(f"Скопировано! HEX: {hex_color} | RGB: {rgb}")
             
-            # Обновляем цветной квадратик и текст в GUI
+            # Обновляем цветной квадратик и текст
             color_preview.config(bg=hex_color)
             color_label.config(text=hex_color)
             
@@ -82,13 +81,12 @@ def start_app():
     root.configure(bg=bg_color)
     root.attributes('-topmost', True)
     
-    # --- Настройка корректного закрытия фонового потока pynput при закрытии окна ---
     def on_closing():
         root.destroy()
         sys.exit()
     root.protocol("WM_DELETE_WINDOW", on_closing)
     
-    # --- Верхняя панель: Цвет и Статус ---
+    # Верхняя панель
     top_frame = tk.Frame(root, pady=10, bg=bg_color)
     top_frame.pack(fill=tk.X)
     
@@ -105,7 +103,7 @@ def start_app():
     status_label = tk.Label(top_frame, text="Статус: работает", font=("Arial", 10, "bold"), fg=green, bg=bg_color)
     status_label.pack(side=tk.RIGHT, padx=15)
     
-    # --- Средняя панель: Кнопки управления ---
+    # Средняя панель
     btn_frame = tk.Frame(root, pady=5, bg=bg_color)
     btn_frame.pack(fill=tk.X)
     
@@ -115,7 +113,7 @@ def start_app():
     btn_stop = tk.Button(btn_frame, text="⏸ Пауза", command=stop_capture, width=15, fg="#ffffff", bg=red)
     btn_stop.pack(side=tk.LEFT, padx=5)
     
-    # --- Нижняя панель: Логи ---
+    # Нижняя панель
     log_area = scrolledtext.ScrolledText(root, state='normal', height=8)
     log_area.pack(padx=10, pady=10, fill=tk.BOTH, expand=True)
     
